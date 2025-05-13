@@ -1,3 +1,6 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from local_code.stage_3_code.Dataset_Loader import Dataset_Loader
 from local_code.stage_3_code.Method_CNN_ORL import Method_CNN_ORL
 from local_code.stage_3_code.Result_Saver import Result_Saver
@@ -21,7 +24,7 @@ if 1:
     method_obj = Method_CNN_ORL('CNN for ORL', '')
 
     result_obj = Result_Saver('saver', '')
-    result_obj.result_destination_folder_path = '../../data/stage_3_result/ORL_CNN/'
+    result_obj.result_destination_folder_path = '../../result/stage_3_result/ORL_CNN/'
     result_obj.result_destination_file_name = 'orl_prediction_result'
 
     setting_obj = Setting_Train_Test_Split('train test split', '')

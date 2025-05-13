@@ -1,3 +1,6 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from local_code.stage_3_code.Dataset_Loader import Dataset_Loader
 from local_code.stage_3_code.Method_CNN_CIFAR import Method_CNN_CIFAR
 from local_code.stage_3_code.Result_Saver import Result_Saver
@@ -21,7 +24,7 @@ if __name__ == '__main__':
     method_obj = Method_CNN_CIFAR('CNN for CIFAR-10', '')
 
     result_obj = Result_Saver('saver', '')
-    result_obj.result_destination_folder_path = '../../data/stage_3_result/CIFAR_CNN/'
+    result_obj.result_destination_folder_path = '../../result/stage_3_result/CIFAR_CNN/'
     result_obj.result_destination_file_name = 'cifar_prediction_result'
 
     setting_obj = Setting_Train_Test_Split('CIFAR', 'CNN on CIFAR-10 dataset')
