@@ -23,7 +23,7 @@ classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 class Method_CNN_MNIST(method, nn.Module):
     data = None
-    max_epoch = 40
+    max_epoch = 1
     learning_rate = 2e-3
     batch_size = 128
 
@@ -93,7 +93,13 @@ class Method_CNN_MNIST(method, nn.Module):
         loss_function = nn.CrossEntropyLoss()
         visualizer = Training_Visualizer()
 
-        train_loader = self.data['train_loader']
+        # 修改数据加载器配置，禁用多进程
+        train_loader = DataLoader(
+            self.data['train_dataset'],
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=0  # 设置为0，禁用多进程
+        )
         print(f"Training on {len(train_loader.dataset)} samples")
 
         # Training loop
@@ -104,7 +110,7 @@ class Method_CNN_MNIST(method, nn.Module):
 
             for images, labels in tqdm(train_loader, desc=f'Epoch {epoch}'):
                 images = images.to(device)
-                labels = labels.to(device)
+                labels = labels.to(device).long()  # 确保标签是 Long 类型
 
                 outputs = self.forward(images)
                 loss = loss_function(outputs, labels)
@@ -134,9 +140,16 @@ class Method_CNN_MNIST(method, nn.Module):
     def visualize_test_results(self, test_loader, num_samples=10):
         """visualize test results and save as PNG file"""
         self.eval()
-        images, labels = next(iter(test_loader))
+        # create a new data loader for visualization
+        vis_loader = DataLoader(
+            self.data['test_dataset'],
+            batch_size=num_samples,
+            shuffle=True,
+            num_workers=0  # set
+        )
+        images, labels = next(iter(vis_loader))
         images = images[:num_samples].to(device)
-        labels = labels[:num_samples].to(device)
+        labels = labels[:num_samples].to(device).long()  # ensure labels are Long type
         
         with torch.no_grad():
             outputs = self.forward(images)
@@ -153,7 +166,7 @@ class Method_CNN_MNIST(method, nn.Module):
         fig = plt.figure(figsize=(15, 3))
         for i in range(num_samples):
             ax = fig.add_subplot(1, num_samples, i + 1)
-            ax.imshow(images[i].squeeze(), cmap='gray')  # MNIST is grayscale
+            ax.imshow(images[i])
             ax.axis('off')
             color = 'green' if predicted[i] == labels[i] else 'red'
             ax.set_title(f'True: {classes[labels[i]]}\nPred: {classes[predicted[i]]}', 
@@ -161,13 +174,19 @@ class Method_CNN_MNIST(method, nn.Module):
         plt.tight_layout()
         
         # save image
-        plt.savefig('mnist_test_results.png', dpi=300, bbox_inches='tight')
+        plt.savefig('test_results.png', dpi=300, bbox_inches='tight')
         plt.close()
-        print("Test results saved to 'mnist_test_results.png'")
+        print("Test results saved to 'test_results.png'")
 
     def test(self):
         self.eval()  # evaluation mode
-        test_loader = self.data['test_loader']
+        # modify the test data loader configuration
+        test_loader = DataLoader(
+            self.data['test_dataset'],
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=0  # set
+        )
         print(f"Testing on {len(test_loader.dataset)} samples")
         
         all_preds = []
@@ -176,7 +195,7 @@ class Method_CNN_MNIST(method, nn.Module):
         with torch.no_grad():
             for images, labels in tqdm(test_loader, desc="Testing"):
                 images = images.to(device)
-                labels = labels.to(device)
+                labels = labels.to(device).long()  # ensure labels are Long type
                 outputs = self.forward(images)
                 _, predicted = outputs.max(1)
                 all_preds.extend(predicted.cpu().numpy())

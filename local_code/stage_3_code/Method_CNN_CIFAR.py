@@ -24,7 +24,7 @@ classes = ['airplane', 'automobile', 'bird', 'cat', 'deer',
 
 class Method_CNN_CIFAR(method, nn.Module):
     data = None
-    max_epoch = 50
+    max_epoch = 1
     learning_rate = 2e-3
     batch_size = 128
 
@@ -109,7 +109,7 @@ class Method_CNN_CIFAR(method, nn.Module):
 
             for images, labels in tqdm(train_loader, desc=f'Epoch {epoch}'):
                 images = images.to(device)
-                labels = labels.to(device)
+                labels = labels.to(device).long()  # 确保标签是 Long 类型
 
                 outputs = self.forward(images)
                 loss = loss_function(outputs, labels)
@@ -141,7 +141,7 @@ class Method_CNN_CIFAR(method, nn.Module):
         self.eval()
         images, labels = next(iter(test_loader))
         images = images[:num_samples].to(device)
-        labels = labels[:num_samples].to(device)
+        labels = labels[:num_samples].to(device).long()  # 确保标签是 Long 类型
         
         with torch.no_grad():
             outputs = self.forward(images)
@@ -181,7 +181,7 @@ class Method_CNN_CIFAR(method, nn.Module):
         with torch.no_grad():
             for images, labels in tqdm(test_loader, desc="Testing"):
                 images = images.to(device)
-                labels = labels.to(device)
+                labels = labels.to(device).long()  # 确保标签是 Long 类型
                 outputs = self.forward(images)
                 _, predicted = outputs.max(1)
                 all_preds.extend(predicted.cpu().numpy())

@@ -7,6 +7,7 @@ Concrete ResultModule class for a specific experiment ResultModule output
 
 from local_code.base_class.result import result
 import pickle
+import os
 
 
 class Result_Saver(result):
@@ -17,6 +18,8 @@ class Result_Saver(result):
     
     def save(self):
         print('saving results...')
+        # 确保目录存在
+        os.makedirs(self.result_destination_folder_path, exist_ok=True)
         f = open(self.result_destination_folder_path + self.result_destination_file_name + '_' + str(self.fold_count), 'wb')
         pickle.dump(self.data, f)
         f.close()

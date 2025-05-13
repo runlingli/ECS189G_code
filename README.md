@@ -82,16 +82,9 @@ This code is for TA review purposes only.
    ```bash
    pip install torch numpy matplotlib tqdm
    ```
-3. Run the scripts in the `script` directory:
+3. Run the scripts in the `stage_#_script` directory:
    ```bash
-   # For MNIST
-   python script/stage_3_script/script_mnist.py
-   
-   # For CIFAR-10
-   python script/stage_3_script/script_cifar.py
-   
-   # For ORL
-   python script/stage_3_script/script_orl.py
+      python script_***.py
    ```
 
 ## Results

@@ -1,3 +1,6 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from local_code.stage_2_code.Dataset_Loader import Dataset_Loader
 from local_code.stage_2_code.Method_MLP import Method_MLP
 from local_code.stage_2_code.Result_Saver import Result_Saver
@@ -5,6 +8,8 @@ from local_code.stage_2_code.Setting_Train_Test_Split import Setting_Train_Test_
 from local_code.stage_2_code.Evaluate_Metrics import Evaluate_Metrics
 import numpy as np
 import torch
+
+
 
 #---- Multi-Layer Perceptron script ----
 if 1:
